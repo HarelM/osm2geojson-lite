@@ -4,18 +4,18 @@
   "description": "a lightweight yet faster osm (either in xml or in json formats) to geojson convertor - 4x faster than xmldom + osmtogeojson in most situations - implemented in pure JavaScript without any 3rd party dependency",
   "author": "tibetty",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "type": "module",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
-    "dist/**/*.js",
+    "dist/**/*.cjs",
     "dist/**/*.mjs",
     "dist/**/*.d.ts",
     "dist/**/*.json"

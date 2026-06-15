@@ -27,11 +27,15 @@ Usage:
 ```
 
 ### In the Browser
+
+Modern browsers load the ESM build directly via `<script type="module">`. Import it from a CDN (e.g. [esm.sh](https://esm.sh) or [jsDelivr](https://www.jsdelivr.com)):
+
 ```html
-    <script src='your/path/to/osm2geojson-lite.js'/>
-```
-```js
-    let geojson = osm2geojson(osm, opts);
+    <script type="module">
+        import osm2geojson from 'https://esm.sh/osm2geojson-lite';
+
+        const geojson = osm2geojson(osm, opts);
+    </script>
 ```
 
 ### In the command line

@@ -226,4 +226,4 @@ function osm2geojson(osm: string | { [k: string]: any }, opts?: IOptions): Featu
     return { type: 'FeatureCollection', features: featureArray };
 };
 
-export = osm2geojson;
+export default osm2geojson;
