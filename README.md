@@ -79,7 +79,7 @@ $ npm run bench
 |-----------------|----------|--------|---------|-------|
 | vs osmtogeojson | >9.0x    | >16.0x | >3.0x   | >1.6x |
 
-> **Note on `osm2geojson-ultra`:** for JSON, both libraries skip XML tokenizing and run nearly identical element-iteration code, so the *parsing* cost is effectively the same. The benchmark still reports a difference, but it comes from divergent conversion semantics (ultra dropped the `completeFeature`/`renderTagged`/`excludeWay` options and emits a different output shape — e.g. a `GeometryCollection` where this library emits a `MultiPolygon` plus `Point`s), not from faster JSON reading. The XML row above is the meaningful comparison, since that is where the parsers actually differ.
+> **Note on `osm2geojson-ultra`:** for JSON, both libraries skip XML tokenizing and run nearly identical element-iteration code, so the *parsing* cost is effectively the same. The benchmark still reports a difference, but it comes from divergent conversion semantics (ultra dropped the `completeFeature`/`renderTagged`/`excludeWay` options and emits a different output shape — e.g. a `GeometryCollection` where this library emits a `MultiPolygon` plus `Point`s), not from faster JSON reading.
 
 
 Correctness
