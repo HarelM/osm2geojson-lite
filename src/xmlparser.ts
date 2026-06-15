@@ -1,6 +1,9 @@
+/**
+ * Whether an event carries a trailing condition expression, written as
+ * `<path[expr]>`. The cheap `[` check skips the regex for the common
+ * unconditioned events.
+ */
 function conditioned(evt: string): boolean {
-    // fast path: a condition is written as `<path[expr]>`, so skip the regex
-    // entirely for the common unconditioned events that contain no '['.
     return evt.indexOf('[') >= 0 && /^(.+?)\[(.+?)\]>$/.test(evt);
 }
 
@@ -46,8 +49,10 @@ export class XmlParser {
     private progressive: boolean = false;
     private parentMap: WeakMap<any, any> = new WeakMap();
     private evtListeners: { [k: string]: any };
-    // number of registered open-tag (`<path>`) listeners; lets the scanner skip
-    // building open-event strings for the overwhelmingly common leaf elements.
+    /**
+     * Number of registered open-tag (`<path>`) listeners; lets the scanner skip
+     * building open-event strings for the overwhelmingly common leaf elements.
+     */
     private openListenerCount: number = 0;
 
     constructor(opts: any) {
@@ -61,9 +66,18 @@ export class XmlParser {
         this.evtListeners = {};
     }
 
-    // Single-pass, hand-written scanner. Walks the source once, maintaining a
-    // stack of open elements, building a `$tag`/attribute/`$innerNodes` node
-    // tree and emitting progressive `<path>` / `</path>` events.
+    /**
+     * Scan an XML string in a single pass, maintaining a stack of open elements,
+     * building a `$tag`/attribute/`$innerNodes` node tree and emitting
+     * progressive `<path>` / `</path>` events as elements open and close.
+     *
+     * @param xml - the XML source to scan.
+     * @param parent - optional pre-existing node that owns the parsed content;
+     * when supplied, top-level nodes attach to its `$innerNodes` instead of being
+     * returned as roots.
+     * @param dir - optional dotted tag-path prefix applied to emitted event names.
+     * @returns the top-level nodes (empty when a `parent` owns them).
+     */
     public parse(xml: string, parent?: any, dir?: string) {
         const len = xml.length;
         const progressive = this.progressive;
@@ -77,8 +91,6 @@ export class XmlParser {
         let top: Frame | undefined = parent
             ? { node: parent, fullTag: basePath, textStart: 0 }
             : undefined;
-        // when a `parent`/`dir` is supplied the caller owns the root frame; its
-        // children attach to `parent.$innerNodes`, never to `roots`.
         const rootOwner = top;
 
         let i = 0;
@@ -256,10 +268,13 @@ export class XmlParser {
         return null;
     }
 
-    // support javascript condition for the last tag
+    /**
+     * Register a listener for an event. The event may carry a trailing
+     * JavaScript condition (`<path[expr]>`) that must evaluate truthy on the
+     * node for the listener to fire.
+     */
     public addListener(evt: string, func: (node: { [k: string]: any }, parent?: { [k: string]: any }) => void) {
         if (conditioned(evt)) {
-            // func.prototype = evt;
             const ev = parseEvent(evt);
             if (ev.exp) {
                 (func as { [k: string]: any }).condition = genConditionFunc(ev.exp);

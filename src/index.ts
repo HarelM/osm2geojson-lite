@@ -101,7 +101,7 @@ function analyzeFeaturesFromXml(osm: string, refElements: RefElements): void {
     xmlParser.on('</osm.node>', (node: { [k: string]: any }) => {
         const nd = new Node(node.id, refElements);
         for (const k in node) {
-            if (k.charCodeAt(0) !== 36 && k !== 'id' && k !== 'lon' && k !== 'lat') {
+            if (k[0] !== '$' && k !== 'id' && k !== 'lon' && k !== 'lat') {
                 nd.addProp(k, node[k]);
             }
         }
@@ -118,7 +118,7 @@ function analyzeFeaturesFromXml(osm: string, refElements: RefElements): void {
     xmlParser.on('</osm.way>', (node: { [k: string]: any }) => {
         const way = new Way(node.id, refElements);
         for (const k in node) {
-            if (k.charCodeAt(0) !== 36 && k !== 'id') {
+            if (k[0] !== '$' && k !== 'id') {
                 way.addProp(k, node[k]);
             }
         }
@@ -150,7 +150,7 @@ function analyzeFeaturesFromXml(osm: string, refElements: RefElements): void {
         if (node.lat && node.lon) {
             member.lat = node.lat, member.lon = node.lon, member.tags = {};
             for (const k in node) {
-                if (k.charCodeAt(0) !== 36 && k !== 'type' && k !== 'lat' && k !== 'lon') {
+                if (k[0] !== '$' && k !== 'type' && k !== 'lat' && k !== 'lon') {
                     member[k] = node[k];
                 }
             }
